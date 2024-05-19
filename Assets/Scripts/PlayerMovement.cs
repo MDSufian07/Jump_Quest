@@ -6,17 +6,14 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float movementSpeed = 5f;
     [SerializeField] float jumpForce = 5f;
-    //[SerializeField] Transform groundCheck;
-    //[SerializeField] LayerMask ground;
+    [SerializeField] float groundCheckDistance = 0.6f; // Adjust based on the radius of your ball
+    [SerializeField] LayerMask ground;
     Rigidbody rb;
-
-    bool canJump = true; // Flag to track if the player can jump
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
     }
-
 
     void Update()
     {
@@ -24,17 +21,15 @@ public class PlayerMovement : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
         rb.velocity = new Vector3(hori * movementSpeed, rb.velocity.y, verticalInput * movementSpeed);
 
-        if (Input.GetButtonDown("Jump") && canJump) // Check if canJump is true
+        if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             Jump();
-            canJump = false; // Set canJump to false to prevent jumping
-            StartCoroutine(EnableJump()); // Start coroutine to enable jumping after 3 seconds
         }
     }
 
     void Jump()
     {
-        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z); // Changed rb.velocity.y to rb.velocity.z
+        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);  // Preserve horizontal movement
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -45,15 +40,14 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    IEnumerator EnableJump()
+    bool IsGrounded()
     {
-        yield return new WaitForSeconds(1f); // Wait for 3 seconds
-        canJump = true; // Set canJump back to true to allow jumping again
+        // Raycast from the center of the ball downward
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, groundCheckDistance, ground))
+        {
+            return true;
+        }
+        return false;
     }
-
-    /*  bool IsGrounded()
-    {
-        return Physics.CheckSphere(groundCheck.position, .1f, ground);
-    }
-    */
 }
