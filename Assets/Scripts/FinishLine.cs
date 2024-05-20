@@ -9,7 +9,6 @@ public class Finish : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Tuch the line");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
