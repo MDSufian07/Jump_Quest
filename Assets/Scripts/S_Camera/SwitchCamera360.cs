@@ -6,23 +6,30 @@ namespace S_Camera
 {
     public class SwitchCamera360 : MonoBehaviour
     {
-        public CinemachineVirtualCamera[] cameras; // Array of 4 cameras
-        public InputActionAsset inputActions; 
+        public CinemachineVirtualCamera[] cameras;
+        private int _currentCamIndex;
+        [SerializeField] InputActionAsset inputActions;
 
         private InputAction _nextCamera;
         private InputAction _previousCamera;
 
-        private int _currentCamIndex;
+        public static Transform ActiveCameraTransform { get; private set; }  // Store active camera
 
         private void Awake()
         {
             var cameraActions = inputActions.FindActionMap("Camera");
             _nextCamera = cameraActions.FindAction("NextCamera");
             _previousCamera = cameraActions.FindAction("PreviousCamera");
+
+            if (cameras.Length > 0)
+                SetActiveCamera(0); // Start with the first camera
         }
 
         private void OnEnable()
         {
+            if (_nextCamera == null || _previousCamera == null)
+                return;
+
             _nextCamera.Enable();
             _previousCamera.Enable();
             _nextCamera.performed += OnNextCamera;
@@ -31,39 +38,46 @@ namespace S_Camera
 
         private void OnDisable()
         {
-            _nextCamera.performed -= OnNextCamera;
-            _previousCamera.performed -= OnPreviousCamera;
-            _nextCamera.Disable();
-            _previousCamera.Disable();
-        }
+            if (_nextCamera != null)
+                _nextCamera.performed -= OnNextCamera;
 
-        private void Start()
-        {
-            SetCamera(0); // Start with Camera 1
+            if (_previousCamera != null)
+                _previousCamera.performed -= OnPreviousCamera;
+
+            _nextCamera?.Disable();
+            _previousCamera?.Disable();
         }
 
         private void OnNextCamera(InputAction.CallbackContext context)
         {
-            SwitchCamera(1); // Move to the next camera
+            SwitchCamera(1);
         }
 
         private void OnPreviousCamera(InputAction.CallbackContext context)
         {
-            SwitchCamera(-1); // Move to the previous camera
+            SwitchCamera(-1);
         }
 
         private void SwitchCamera(int direction)
         {
+            if (cameras == null || cameras.Length == 0)
+                return;
+
             _currentCamIndex = (_currentCamIndex + direction + cameras.Length) % cameras.Length;
-            SetCamera(_currentCamIndex);
+            SetActiveCamera(_currentCamIndex);
         }
 
-        private void SetCamera(int index)
+        private void SetActiveCamera(int index)
         {
             for (int i = 0; i < cameras.Length; i++)
             {
-                cameras[i].Priority = (i == index) ? 10 : 0; // Active camera gets priority 10, others 0
+                if (cameras[i] != null)
+                    cameras[i].Priority = (i == index) ? 10 : 0;
             }
+
+            // Update the active camera reference
+            if (cameras[index] != null)
+                ActiveCameraTransform = cameras[index].transform;
         }
     }
 }
