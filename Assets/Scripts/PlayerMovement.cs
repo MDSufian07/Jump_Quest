@@ -10,6 +10,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] LayerMask ground;
     Rigidbody rb;
 
+    public AudioSource jumpSound;
+    public AudioSource enemyDethSound;
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -23,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
+            jumpSound.Play();
             Jump();
         }
     }
@@ -36,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy Head"))
         {
+            enemyDethSound.Play();
             Destroy(collision.transform.parent.gameObject);
         }
     }

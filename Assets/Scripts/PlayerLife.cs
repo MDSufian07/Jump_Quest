@@ -5,11 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class PlayerLife : MonoBehaviour
 {
+    public AudioSource slideDownSound;
+    public AudioSource playerDethSound;
+
     bool dead = false;
     private void Update()
     {
         if (transform.position.y < -5f && !dead)
         {
+            slideDownSound.Play();
             Die();
         }
 
@@ -18,6 +22,7 @@ public class PlayerLife : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy Body"))
         {
+            playerDethSound.Play();
             GetComponent<MeshRenderer>().enabled = false;
             GetComponent<Rigidbody>().isKinematic = true;
             GetComponent<PlayerMovement>().enabled = false;
