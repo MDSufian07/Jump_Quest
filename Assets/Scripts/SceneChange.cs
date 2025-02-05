@@ -1,11 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneChange : MonoBehaviour
 {
     [SerializeField] private GameObject panel;
+    [SerializeField] private GameObject hduPanel;
     public AudioSource ClickSound;
 
     public float soundDelay = 0.2f; // Adjust this to the length of your click sound
@@ -39,6 +39,7 @@ public class SceneChange : MonoBehaviour
         {
             PlaySound();
             panel.SetActive(true);
+            hduPanel.SetActive(false);
         }
     }
 
@@ -48,6 +49,7 @@ public class SceneChange : MonoBehaviour
         {
             PlaySound();
             StartCoroutine(HidePanelAfterSound());
+            hduPanel.SetActive(true);
         }
     }
 
@@ -67,5 +69,4 @@ public class SceneChange : MonoBehaviour
         ClickSound.Play();
         SceneManager.LoadScene("Level Two");
     }
-
 }
