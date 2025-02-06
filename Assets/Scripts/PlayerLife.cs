@@ -12,15 +12,15 @@ public class PlayerLife : MonoBehaviour
     private Vector3 lastCheckpoint; 
 
     public Image[] hearts; 
-    public GameObject gameOverPanel; // Reference to Game Over UI
-    public GameObject hduPanel;
+    public GameObject gameOverPanel; // Game Over UI
+    public GameObject hduPanel; // HUD Panel
 
-    bool dead = false;
+    private bool dead = false;
 
     private void Start()
     {
         currentLives = maxLives;
-        lastCheckpoint = transform.position; 
+        lastCheckpoint = transform.position; // Start at default spawn
         gameOverPanel.SetActive(false); // Hide Game Over screen at start
         UpdateHeartsUI();
     }
@@ -65,7 +65,7 @@ public class PlayerLife : MonoBehaviour
 
     void Respawn()
     {
-        transform.position = lastCheckpoint;
+        transform.position = lastCheckpoint; // Respawn at the last checkpoint
         GetComponent<MeshRenderer>().enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
         GetComponent<PlayerMovement>().enabled = true;
@@ -74,7 +74,7 @@ public class PlayerLife : MonoBehaviour
 
     void GameOver()
     {
-        hduPanel.SetActive(false);
+        hduPanel.SetActive(false); // Hide HUD
         gameOverPanel.SetActive(true); // Show Game Over UI
         Time.timeScale = 0f; // Pause the game
     }
