@@ -61,8 +61,15 @@ public class PlayerLife : MonoBehaviour
         }
 
         dead = true;
+    } 
+    public void AddLife(int amount)
+    {
+        if (currentLives < maxLives)
+        {
+            currentLives += amount; // Increase life count
+            UpdateHeartsUI(); // Update the UI
+        }
     }
-
     void Respawn()
     {
         transform.position = lastCheckpoint; // Respawn at the last checkpoint
