@@ -92,6 +92,11 @@ public class PlayerLife : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void ReturnHome()
+    {
+        SceneManager.LoadScene("StartMenu");
+    }
+
     void UpdateHeartsUI()
     {
         for (int i = 0; i < hearts.Length; i++)
