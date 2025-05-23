@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// ------------------------------
-/// Creating instance of particles
+/// Creating Instance of particles
 /// ------------------------------
 public class InstanceExample : MonoBehaviour
 {
