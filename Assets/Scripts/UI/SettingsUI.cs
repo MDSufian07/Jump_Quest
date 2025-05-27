@@ -19,7 +19,7 @@ namespace UI
             sfxSlider.value = SettingsManager.Instance.CurrentSettings.sfxVolume;
             graphicsDropdown.value = SettingsManager.Instance.CurrentSettings.graphicsQuality;
 
-            // Populate refresh rates (60, 75, 120, 144, 165, 240)
+            // Populate refresh rates
             refreshRateDropdown.ClearOptions();
             var options = new TMP_Dropdown.OptionDataList();
             options.options.Add(new TMP_Dropdown.OptionData("60"));
@@ -39,16 +39,26 @@ namespace UI
                     break;
                 }
             }
+
+            // Add real-time volume listeners
+            musicSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
+            sfxSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
+        }
+
+        public void OnMusicVolumeChanged(float value)
+        {
+            SettingsManager.Instance.UpdateVolume(value, sfxSlider.value);
+        }
+
+        public void OnSFXVolumeChanged(float value)
+        {
+            SettingsManager.Instance.UpdateVolume(musicSlider.value, value);
         }
 
         public void OnApplySettings()
         {
-            float musicVolume = musicSlider.value;
-            float sfxVolume = sfxSlider.value;
             int graphicsQuality = graphicsDropdown.value;
             int refreshRate = int.Parse(refreshRateDropdown.options[refreshRateDropdown.value].text);
-
-            SettingsManager.Instance.UpdateVolume(musicVolume, sfxVolume);
             SettingsManager.Instance.UpdateGraphics(graphicsQuality);
             SettingsManager.Instance.UpdateRefreshRate(refreshRate);
         }
